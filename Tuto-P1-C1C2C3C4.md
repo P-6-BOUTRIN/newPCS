@@ -8,8 +8,6 @@ Stocker les données
 
 pour récuperer les informations en ligne API
 
-
-
 P1C3 LA SYNTHAX JSON ajouter les informations à la place des x
 
 Création des objets en json
@@ -31,6 +29,7 @@ Création des objets en json
 P1C4: Générer le  contenu  de votre page grace au dom
 
 ```js
+IMPORTEZ LES DONNEES DU FICHIER JSON
 //1 Inserez ce  code dans pieces.json
 // 2 pour récupérer les pieces qui se trouve dans le fichier   pieces-autos.json
 const reponse = await fetch("pieces-autos.json");
@@ -66,11 +65,6 @@ sectionFiches.appendChild(nomElement);
 sectionFiches.appendChild(prixElement);
 sectionFiches.appendChild(categorieElement);   ```js
    
-```
-
-```js
-
-
 ```
 
 4. Vérifier les  données
