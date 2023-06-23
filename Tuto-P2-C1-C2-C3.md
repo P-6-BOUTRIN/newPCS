@@ -1,6 +1,6 @@
 P2-Manipulez les listes en js
 
-* FILTER :pour filtrer les produits   : prend une function il ne peut être qu'une fois  par function anonyme
+* FILTER :pour filtrer les produits   : Prends une function et il ne peut être utilisé qu'une fois  par function anonyme
 * ```js
   filter(function(pieces)) //ile prend comme argument  1 true 2 false 
   ```
