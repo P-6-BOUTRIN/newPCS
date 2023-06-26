@@ -4,7 +4,7 @@ P2-Manipulez les listes en js
 * ```js
   filter(function(pieces)) //ile prend comme argument  1 true 2 false 
   ```
-* SORT :Pour réordonner une liste elle renvois =>  negatif positif  null
+* SORT :Pour réordonner une liste elle :  negatif positif  null
 * ```js
   sort(function(a,b))
   ```
@@ -30,3 +30,7 @@ P2-Manipulez les listes en js
   }
   ```
 * Récupérer le css
+
+
+
+CODE FINAL COUR P2C1
