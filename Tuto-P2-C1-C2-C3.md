@@ -31,6 +31,7 @@ P2-Manipulez les listes en js
   ```
 * Récupérer le css
 
+Lundi matin
 
 
 CODE FINAL COUR P2C1
