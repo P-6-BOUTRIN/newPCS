@@ -10,7 +10,7 @@ pour récuperer les informations en ligne API
 
 P1C3 LA SYNTHAX JSON ajouter les informations à la place des x
 
-Création des objets en json
+Création des objets en json  
 
 ```json
 [
