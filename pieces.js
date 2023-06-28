@@ -1,54 +1,10 @@
-// P2C3
-// Récupération des pieces depuis le fichier JSON
-const pieces = await fetch("pieces-auto.json")
-.then(pieces => pieces.json());
-// Function qui génère toute la page web
-function genererPieces(piece){
-for(let i = 0; i < piece.length; i++) {
-// Création d'une balise à  une piece auto
-const pieceElement = document.createElement("article");
-// On créer l'élément img
-const imageElement = document.createElement("img");
-// On accède a l'indice i de la liste piece pour configurer la source de l'image
-imageElement.src = piece[i].image
-// On rattache l'image à pieceElement(la balise article
-pieceElement.appendChild(imageElement);
-// Idem pour le nom le prix et la catégorie ...
-const nomElement = document.createElement("p");
-const prixElement = document.createElement("p");
-const categorieElement = document.createElement("p");
+import { ajoutListenersAvis } from "./avis.js"; 
 
-pieceElement.appendChild(prixElement)
-pieceElement.appendChild(nomElement);
-pieceElement.appendChild(categorieElement);
+// Récupération des pièces depuis le fichier JSON  // P2C3
+const reponse = await fetch("http://localhost:8081/pieces/");
+const pieces = await reponse.json();
 
-}
-}
-document.body.appendChild(pieceElement)
-
-
-// P2C3 SUITE
-// Premier affichage de la page
-genererPieces(pieces);
-// Ajout du listener pour trier les pieces par ordre de prix croissant
-const boutonTrier = document.querySelector(".btnTrier")
-boutonTrier.addEventListener("click", function(){
-const pieceOrdonnées = Array.from(pieces)
-pieceOrdonnées.sort(function (a, b){
-return b.prix - a.prix;
-});
-// Effacement de l'écran et regénération de la page
-document.querySelector(".fiches").innerHTML = "";
-genererPieces(pieceOrdonnées)
-})
-
-
-
-
-// Récupération des pièces depuis le fichier JSON
-// const reponse = await fetch("pieces-autos.json");
-// const pieces = await reponse.json();
-
+  function genererPieces(pieces){
 for (let i = 0; i < pieces.length; i++) {
   // Remplacer le 0 par la variable  i qui permet de recupérer la piece au parcour de la boucle
   const article = pieces[i];
@@ -62,18 +18,18 @@ for (let i = 0; i < pieces.length; i++) {
   const nomElement = document.createElement("h2");
   nomElement.innerText = article.nom;
   const prixElement = document.createElement("p");
-  prixElement.innerText = `Prix: ${article.prix} € (${
-    article.prix < 35 ? "€" : "€€€"
-  })`;
+  prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`;
   const categorieElement = document.createElement("p");
   categorieElement.innerText = article.categorie ?? "(aucune catégorie";
   const descriptionElement = document.createElement("p");
-  descriptionElement.innerText =
-    article.descriptionElement ?? "Pas de description pour le moment.";
+  descriptionElement.innerText = article.descriptionElement ?? "Pas de description pour le moment.";
   const stockElement = document.createElement("p");
-  stockElement.innerText = article.disponibilite
-    ? "En stock"
-    : "Rupture de stock";
+  stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock";
+  
+  const avisBouton = document.createElement("button");
+  avisBouton.dataset.id = article.id;
+  avisBouton.textContent = "Afficher les avis";
+  
 
   /*Rattaché le avec querySelector: VP1C4*/
   sectionFiches.appendChild(pieceElement);
@@ -83,25 +39,32 @@ for (let i = 0; i < pieces.length; i++) {
   pieceElement.appendChild(categorieElement);
   pieceElement.appendChild(descriptionElement);
   pieceElement.appendChild(stockElement);
-}
+  pieceElement.appendChild(avisBouton);
 
-// BOUTON FILTRE
+}
+ajoutListenersAvis();
+  }
+
+genererPieces(pieces);
+  
+// Gestion des bouton
 // Permets de trier dans  l'ordre  les pieces en fonction du prix
-// const boutonTrier = document.querySelector(".btn-trier");
-// boutonTrier.addEventListener("click", function () {
+const boutonTrier = document.querySelector(".btn-trier");
+boutonTrier.addEventListener("click", function () {
 //   // création dune const pour mettre les pieces  dans un tableau en ordre de prix
-//   const pieceOrdonnées = Array.from(pieces);
-//   pieceOrdonnées.sort(function (a, b) {
-//     return a.prix - b.prix;
-//   });
-//   // console.table(pieces);
-// });
+  const pieceOrdonnées = Array.from(pieces);
+  pieceOrdonnées.sort(function (a, b) {
+    return a.prix - b.prix;
+  });
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(pieceOrdonnées);
+});
 
 const boutonFilter = document.querySelector(".btn-filtrer");
 boutonFilter.addEventListener("click", function () {
   // La function Filter
   const piecesFiltrees = pieces.filter(function (piece) {
-    return piece.disponibilite;
+    return piece.piecesFiltrees;
   });
   // Effacement de l'écran et regénération de la page
 document.querySelector(".fiches").innerHTML = "";
@@ -113,10 +76,11 @@ const boutonDecr = document.querySelector(".btn-decroissant");
 boutonDecr.addEventListener("click", function () {
   // création dune const pour mettre les pieces  dans un tableau en ordre de prix
   const pieceDecr = Array.from(pieces);
-  pieceDecr.sort(function (a, b) {
+  pieceOrdonnées.sort(function (a, b) {
     return b.prix - a.prix;
   });
-  console.table(pieceDecr);
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(pieceOrdonnées);
 });
 
 const boutonNoDescription = document.querySelector(".btn-nodesc");
@@ -125,8 +89,10 @@ boutonNoDescription.addEventListener("click", function () {
   const piecesFiltrees = pieces.filter(function (piece) {
     return piece.description;
   });
-  console.table(piecesFiltrees);
+  document.querySelector(".fiches").innerHTML ="";
+  genererPieces("piecesFiltrees");
 });
+
 
 // Pour uniquement les nom des pieces plus chère que 35
 const noms = pieces.map((piece) => piece.nom);
@@ -135,7 +101,12 @@ for (let i = pieces.length -1; i >= 0; i--) {
     noms.splice(i, 1);
   }
 }
+
 // console.table(noms);
+// Création de l'en-tête
+
+const pElement = document.createElement("p")
+pElement.innerText = "Pieces abordables";
 
 //  Création de la liste
 const abordablesElements = document.createElement("ul");
@@ -145,9 +116,9 @@ for (let i = 0; i < noms.length; i++) {
   nomElement.innerText = noms[i];
   abordablesElements.appendChild(nomElement);
 }
-// Rattacher l'élément ul  a l'élément present dans la page
-// Ajout de l'en-tête puis de le liste au bloc résultat filtres
+
 document.querySelector(".abordables")
+.appendChild(pElement)
 .appendChild(abordablesElements);
 
 
@@ -173,11 +144,24 @@ nomElement.innerText =`${nomsDisponibles[i]}-${prixDisponibles[i]} €`;
 disponiblesElement.appendChild(nomElement);
 }
 // Rattacher l'élément 
-// document.querySelector(".disponibles").appendChild(disponiblesElement);
-document.querySelector(".disponibles").appendChild(disponiblesElement);
+const pElementDisponible = document.createElement("p");
+pElementDisponible.innerText = "Pièces disponibles :";
+document.querySelector(".disponibles").appendChild(pElementDisponible).appendChild(disponiblesElement);
 
-// P2C3
+// P2C3 Correction
 // // Efface le contenu d'une balise body et donc l'écran
 // document.querySelector(".fiches").innerHTML = "";
+
+const inputPrixMax = document.querySelector("#prix-max")
+inputPrixMax.addEventListener("input", function(){
+// Filtrer les pieces
+const piecesFiltrees = pieces.filter(function(piece){ 
+return piece.prix <= inputPrixMax.value;
+})
+// Effacer l'écran et faite générer piece
+document.querySelector(".fiches").innerHTML = "";
+genererPieces(piecesFiltrees);
+});
+
 
 
