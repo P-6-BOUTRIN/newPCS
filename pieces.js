@@ -1,6 +1,53 @@
+// P2C3
+// Récupération des pieces depuis le fichier JSON
+const pieces = await fetch("pieces-auto.json")
+.then(pieces => pieces.json());
+// Function qui génère toute la page web
+function genererPieces(piece){
+for(let i = 0; i < piece.length; i++) {
+// Création d'une balise à  une piece auto
+const pieceElement = document.createElement("article");
+// On créer l'élément img
+const imageElement = document.createElement("img");
+// On accède a l'indice i de la liste piece pour configurer la source de l'image
+imageElement.src = piece[i].image
+// On rattache l'image à pieceElement(la balise article
+pieceElement.appendChild(imageElement);
+// Idem pour le nom le prix et la catégorie ...
+const nomElement = document.createElement("p");
+const prixElement = document.createElement("p");
+const categorieElement = document.createElement("p");
+
+pieceElement.appendChild(prixElement)
+pieceElement.appendChild(nomElement);
+pieceElement.appendChild(categorieElement);
+
+}
+}
+document.body.appendChild(pieceElement)
+
+
+// P2C3 SUITE
+// Premier affichage de la page
+genererPieces(pieces);
+// Ajout du listener pour trier les pieces par ordre de prix croissant
+const boutonTrier = document.querySelector(".btnTrier")
+boutonTrier.addEventListener("click", function(){
+const pieceOrdonnées = Array.from(pieces)
+pieceOrdonnées.sort(function (a, b){
+return b.prix - a.prix;
+});
+// Effacement de l'écran et regénération de la page
+document.querySelector(".fiches").innerHTML = "";
+genererPieces(pieceOrdonnées)
+})
+
+
+
+
 // Récupération des pièces depuis le fichier JSON
-const reponse = await fetch("pieces-autos.json");
-const pieces = await reponse.json();
+// const reponse = await fetch("pieces-autos.json");
+// const pieces = await reponse.json();
 
 for (let i = 0; i < pieces.length; i++) {
   // Remplacer le 0 par la variable  i qui permet de recupérer la piece au parcour de la boucle
@@ -40,23 +87,25 @@ for (let i = 0; i < pieces.length; i++) {
 
 // BOUTON FILTRE
 // Permets de trier dans  l'ordre  les pieces en fonction du prix
-const boutonTrier = document.querySelector(".btn-trier");
-boutonTrier.addEventListener("click", function () {
-  // création dune const pour mettre les pieces  dans un tableau en ordre de prix
-  const pieceOrdonnées = Array.from(pieces);
-  pieceOrdonnées.sort(function (a, b) {
-    return a.prix - b.prix;
-  });
-  // console.table(pieces);
-});
+// const boutonTrier = document.querySelector(".btn-trier");
+// boutonTrier.addEventListener("click", function () {
+//   // création dune const pour mettre les pieces  dans un tableau en ordre de prix
+//   const pieceOrdonnées = Array.from(pieces);
+//   pieceOrdonnées.sort(function (a, b) {
+//     return a.prix - b.prix;
+//   });
+//   // console.table(pieces);
+// });
 
 const boutonFilter = document.querySelector(".btn-filtrer");
 boutonFilter.addEventListener("click", function () {
   // La function Filter
   const piecesFiltrees = pieces.filter(function (piece) {
-    return piece.prix <= 35;
+    return piece.disponibilite;
   });
-  console.table(piecesFiltrees);
+  // Effacement de l'écran et regénération de la page
+document.querySelector(".fiches").innerHTML = "";
+genererPieces(piecesFiltrees)
 });
 
 // / Permets de trier  le prix du plus grand au plus petit
@@ -69,8 +118,6 @@ boutonDecr.addEventListener("click", function () {
   });
   console.table(pieceDecr);
 });
-
-
 
 const boutonNoDescription = document.querySelector(".btn-nodesc");
 boutonNoDescription.addEventListener("click", function () {
@@ -128,3 +175,9 @@ disponiblesElement.appendChild(nomElement);
 // Rattacher l'élément 
 // document.querySelector(".disponibles").appendChild(disponiblesElement);
 document.querySelector(".disponibles").appendChild(disponiblesElement);
+
+// P2C3
+// // Efface le contenu d'une balise body et donc l'écran
+// document.querySelector(".fiches").innerHTML = "";
+
+
